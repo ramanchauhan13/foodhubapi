@@ -39,6 +39,10 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
 app.put("/add-menu/:adminId", async (req, res) => {
   try {
     const { adminId } = req.params;
