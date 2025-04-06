@@ -14,5 +14,8 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^3.1.9",
     "razorpay": "^2.9.6"
-  }
+  },
+  "optionalDependencies": {
+  "@rollup/rollup-linux-x64-gnu": "^4.39.0"
+}
 }
