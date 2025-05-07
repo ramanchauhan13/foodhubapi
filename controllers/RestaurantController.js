@@ -41,4 +41,6 @@ const getAllRestaurants = async(req,res)=>{
   }
 };
 
+
+
 module.exports = { getRestaurant,getAllRestaurants,getRestaurantByName };

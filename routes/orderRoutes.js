@@ -112,7 +112,7 @@ router.get("/user/:userId/orders", async (req, res) => {
 router.put("/admin/orders/:orderId/status", async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { status, restaurantId } = req.body;
+    const { status, restaurantId, deliveryBoy, deliveryTime } = req.body;
 
     const order = await Order.findOne({ _id: orderId, restaurantId });
 
@@ -121,6 +121,11 @@ router.put("/admin/orders/:orderId/status", async (req, res) => {
     }
 
     order.status = status;
+    order.deliveryBoy = deliveryBoy;
+
+    if (deliveryTime !== undefined) {
+      order.deliveryTime = deliveryTime;
+    }
     await order.save();
 
     res.json({ message: "Order status updated successfully!", order });
