@@ -134,32 +134,39 @@ router.put("/admin/orders/:orderId/status", async (req, res) => {
   }
 });
 
-
-// ✅ Update order status from user
-router.put("/orders/:orderId/cancel", async (req, res) => {
+//get all order by restaurant id
+// GET all orders for a specific restaurant
+router.get("/restaurant/:adminId/orders", async (req, res) => {
   try {
-    const { orderId } = req.params;
-    
-    // Find the order and check if it's still pending
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ message: "Order not found." });
+    const { adminId } = req.params;
+    // const { restaurantId } = req.params;
+
+    const restaurant = await Restaurant.findOne({
+      adminId: adminId
+    }).select("_id");
+   
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
     }
 
-    if (order.status !== "Pending") {
-      return res.status(400).json({ message: "Only pending orders can be cancelled." });
+    const restaurantId = restaurant._id;
+
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      return res.status(400).json({ message: "Invalid Restaurant ID" });
     }
 
-    // Update order status to "Cancelled"
-    order.status = "Cancelled";
-    await order.save();
+    const orders = await Order.find({
+      restaurantId
+    })
+      .populate("userId", "department")
 
-    res.status(200).json({ message: "Order cancelled successfully." });
+    res.status(200).json(orders);
   } catch (error) {
-    console.error("Error cancelling order:", error);
-    res.status(500).json({ message: "Server error while cancelling order." });
+    console.error("Error fetching restaurant orders:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 module.exports = router;
